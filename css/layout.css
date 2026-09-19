@@ -1,0 +1,66 @@
+/* ---------- NAV ---------- */
+header.nav{
+  border-bottom:1px solid var(--linea);
+  background:var(--asfalto);
+  position:sticky;top:0;z-index:20;
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;max-width:1100px;margin:0 auto;
+  flex-wrap:wrap;gap:12px;
+}
+.logo{
+  font-family:var(--font-display);
+  font-size:20px;letter-spacing:-0.02em;
+  display:flex;align-items:center;gap:10px;
+  text-decoration:none;
+}
+.logo-mark{
+  width:28px;height:28px;background:var(--neon);
+  clip-path: polygon(0 0, 100% 0, 70% 100%, 0% 100%);
+  flex-shrink:0;
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  padding:72px 24px 56px;
+  border-bottom:1px solid var(--linea);
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  top:-40%;right:-10%;
+  width:520px;height:520px;
+  background:radial-gradient(circle, rgba(212,255,63,0.10) 0%, rgba(212,255,63,0) 70%);
+  pointer-events:none;
+}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;}
+.kicker{color:var(--neon);font-weight:700;font-size:14px;margin:0 0 14px;}
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(34px, 5.5vw, 58px);
+  line-height:1.02;margin:0 0 20px;max-width:14ch;letter-spacing:-0.01em;
+}
+.hero-sub{color:var(--texto-tenue);font-size:17px;line-height:1.6;max-width:52ch;margin:0 0 28px;}
+.hero-stats{display:flex;gap:36px;margin-top:8px;flex-wrap:wrap;}
+.stat b{display:block;font-family:var(--font-display);font-size:26px;}
+.stat span{font-size:13px;color:var(--texto-tenue);}
+
+/* ---------- SECCIONES ---------- */
+.section{padding:52px 24px;border-bottom:1px solid var(--linea);}
+.section-head{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:wrap;gap:10px;
+}
+.section-head h2{font-family:var(--font-display);font-size:26px;margin:0;letter-spacing:-0.01em;}
+.section-head p{color:var(--texto-tenue);font-size:14px;margin:0;}
+
+.site-footer{padding:36px 24px;color:var(--texto-tenue);font-size:13px;text-align:center;}
+
+.empty-state{color:var(--texto-tenue);font-size:14px;padding:40px 0;text-align:center;}
+
+@media (max-width:640px){
+  .nav-inner{flex-direction:column;align-items:flex-start;}
+}

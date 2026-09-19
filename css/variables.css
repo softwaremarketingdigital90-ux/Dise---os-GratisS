@@ -1,0 +1,27 @@
+/*
+  Tokens de diseño. Cambia aquí colores, radios y fuentes:
+  se propagan a todo el sitio automáticamente.
+*/
+:root{
+  --asfalto: #17181c;
+  --asfalto-2: #202228;
+  --panel: #2a2d35;
+  --linea: #383b44;
+  --texto: #eceef1;
+  --texto-tenue: #9a9ea8;
+
+  --neon: #d4ff3f;
+  --neon-dim: #a8cc2f;
+  --naranja: #ff6a3d;
+  --azul: #4dd0e1;
+  --morado: #b06bff;
+
+  --radio-sm: 4px;
+  --radio-md: 6px;
+  --radio-pill: 999px;
+
+  --font-display: 'Archivo Black', sans-serif;
+  --font-texto: 'Archivo', sans-serif;
+
+  color-scheme: dark;
+}

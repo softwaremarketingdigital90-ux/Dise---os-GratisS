@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VectorGarage — Diseños listos para imprimir</title>
+<meta name="description" content="Plantillas vectoriales para calcomanías de moto, DTF y diseños temáticos. Descarga directa en SVG y PNG.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/componentes.css">
+<link rel="stylesheet" href="css/layout.css">
+
+<!-- ============================================================
+     ANUNCIOS: pega aquí tu script de Google AdSense (una sola vez,
+     en el <head>, según las instrucciones que te da AdSense al
+     aprobar tu cuenta). Ejemplo:
+
+     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXX"
+             crossorigin="anonymous"></script>
+     ============================================================ -->
+
+<!-- ============================================================
+     OUTPUSH: pega aquí tu script de suscripción push, según las
+     instrucciones de tu cuenta de Outpush.
+     ============================================================ -->
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#" class="logo"><span class="logo-mark" aria-hidden="true"></span>VectorGarage</a>
+      <nav class="links" aria-label="Categorías">
+        <button class="cat-btn active" data-cat="todos">Todos</button>
+        <!-- El resto de botones de categoría se generan desde data/productos.json -->
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="kicker">DISEÑOS LISTOS PARA CORTE Y ESTAMPADO</p>
+      <h1 class="hero-title">Vinil para tu moto, listo en un clic.</h1>
+      <p class="hero-sub">Plantillas vectoriales en SVG + PNG de referencia, organizadas por modelo y estilo. Descarga directa, sin registro.</p>
+      <div class="hero-stats">
+        <div class="stat"><b id="stat-total">—</b><span>diseños disponibles</span></div>
+        <div class="stat"><b id="stat-categorias">—</b><span>categorías</span></div>
+        <div class="stat"><b>SVG + PNG</b><span>formato de entrega</span></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Explorar diseños</h2>
+        <p>Se actualiza cada semana con piezas nuevas</p>
+      </div>
+
+      <div class="search-row">
+        <div class="search-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input
+            type="search"
+            id="buscador"
+            class="search-input"
+            placeholder="Buscar diseño (ej. pulsar, discover, dragon ball...)"
+            autocomplete="off"
+            aria-label="Buscar diseño"
+          />
+        </div>
+      </div>
+
+      <div class="cats" id="cats" role="tablist" aria-label="Filtrar por categoría">
+        <!-- Botones de categoría generados por JS desde productos.json -->
+      </div>
+
+      <div class="grid" id="grid" aria-live="polite">
+        <!-- Tarjetas de producto generadas por JS -->
+      </div>
+
+      <p class="empty-state" id="emptyState" hidden>No hay diseños en esta categoría todavía.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">VectorGarage · los diseños mostrados son de tu catálogo real una vez cargues tus datos</div>
+  </footer>
+
+  <!-- Modal de producto / descarga -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-top">
+        <strong id="modalCatLabel"></strong>
+        <button class="close" id="btnCerrarModal" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Contenido dinámico: ficha de producto o pantalla de espera -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/descarga.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+/* ---------- BUSCADOR ---------- */
+.search-row{margin-bottom:20px;}
+.search-box{
+  position:relative;
+  max-width:480px;
+}
+.search-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:var(--texto-tenue);pointer-events:none;
+}
+.search-input{
+  width:100%;
+  background:var(--panel);
+  border:1px solid var(--linea);
+  border-radius:var(--radio-md);
+  color:var(--texto);
+  font-family:var(--font-texto);
+  font-size:14px;
+  padding:12px 14px 12px 42px;
+  transition:border-color .15s;
+}
+.search-input::placeholder{color:var(--texto-tenue);}
+.search-input:focus{
+  outline:none;
+  border-color:var(--neon-dim);
+}
+/* el navegador agrega una "x" nativa en type=search, la dejamos como está */
+
+/* ---------- FILTROS DE CATEGORÍA ---------- */
+.cats{display:flex;gap:10px;margin-bottom:32px;flex-wrap:wrap;}
+.cat-btn{
+  border:1px solid var(--linea);background:transparent;color:var(--texto-tenue);
+  padding:9px 18px;border-radius:var(--radio-pill);font-size:14px;font-weight:600;
+  cursor:pointer;transition:.15s;
+}
+.cat-btn:hover{border-color:var(--texto-tenue);color:var(--texto);}
+.cat-btn.active{background:var(--neon);border-color:var(--neon);color:#12140a;}
+
+/* ---------- GRID DE PRODUCTOS ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
+.card{
+  background:var(--panel);border:1px solid var(--linea);
+  border-radius:var(--radio-sm);overflow:hidden;
+  cursor:pointer;transition:.18s ease;
+  text-align:left;width:100%;color:inherit;
+}
+.card:hover{border-color:var(--neon-dim);transform:translateY(-2px);}
+.card-thumb{
+  aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:15px;text-align:center;padding:14px;
+  color:rgba(255,255,255,0.9);position:relative;
+}
+.card-thumb .tag{
+  position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.5);
+  font-family:var(--font-texto);font-weight:700;font-size:10px;letter-spacing:.04em;
+  padding:3px 8px;border-radius:3px;color:var(--texto);
+}
+.card-info{padding:12px 14px 14px;}
+.card-info .name{font-weight:700;font-size:14px;margin-bottom:4px;}
+.card-info .meta{font-size:12px;color:var(--texto-tenue);display:flex;justify-content:space-between;}
+
+/* ---------- MODAL ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(10,11,13,0.78);
+  display:none;align-items:flex-start;justify-content:center;
+  padding:40px 20px;overflow-y:auto;z-index:50;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--asfalto-2);border:1px solid var(--linea);
+  border-radius:8px;max-width:640px;width:100%;
+  animation:pop .18s ease;
+}
+@keyframes pop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.modal-top{
+  padding:18px 22px;border-bottom:1px solid var(--linea);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.modal-top strong{font-size:13px;color:var(--texto-tenue);letter-spacing:.03em;}
+.modal-top .close{background:none;border:none;color:var(--texto-tenue);font-size:22px;cursor:pointer;line-height:1;padding:4px;}
+.modal-body{padding:26px;}
+.modal-thumb{
+  aspect-ratio:16/9;border-radius:6px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:22px;color:rgba(255,255,255,0.9);
+}
+.modal-body h3{font-family:var(--font-display);font-size:22px;margin:0 0 8px;}
+.modal-body .desc{color:var(--texto-tenue);font-size:14px;line-height:1.6;margin-bottom:18px;}
+.specs{display:flex;gap:18px;margin-bottom:22px;flex-wrap:wrap;}
+.spec{font-size:13px;color:var(--texto-tenue);}
+.spec b{color:var(--texto);display:block;font-size:14px;}
+
+.btn-primary{
+  background:var(--neon);color:#12140a;border:none;
+  font-weight:700;font-size:15px;padding:14px 22px;border-radius:5px;
+  cursor:pointer;width:100%;transition:.15s;
+}
+.btn-primary:hover{background:var(--neon-dim);}
+.btn-primary:disabled{background:var(--linea);color:var(--texto-tenue);cursor:not-allowed;}
+
+/* ---------- PANTALLA DE ESPERA / ANUNCIOS ---------- */
+.ad-slot{
+  border:1px dashed var(--linea);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--texto-tenue);font-size:12px;font-weight:600;letter-spacing:.03em;
+  background:var(--panel);margin-bottom:14px;
+}
+.ad-slot.large{height:100px;}
+.ad-slot.small{height:64px;}
+.timer-row{display:flex;align-items:center;gap:14px;margin:20px 0 16px;}
+.timer-circle{
+  width:46px;height:46px;border-radius:50%;
+  border:3px solid var(--linea);border-top-color:var(--neon);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:15px;flex-shrink:0;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.timer-text{font-size:13px;color:var(--texto-tenue);}
+.note{font-size:12px;color:var(--texto-tenue);margin-top:10px;text-align:center;}
