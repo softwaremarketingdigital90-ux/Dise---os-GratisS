@@ -98,23 +98,36 @@
 .btn-primary:hover{background:var(--neon-dim);}
 .btn-primary:disabled{background:var(--linea);color:var(--texto-tenue);cursor:not-allowed;}
 
-/* ---------- PANTALLA DE ESPERA / ANUNCIOS ---------- */
-.ad-slot{
-  border:1px dashed var(--linea);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--texto-tenue);font-size:12px;font-weight:600;letter-spacing:.03em;
-  background:var(--panel);margin-bottom:14px;
+/* ---------- PANTALLA DE DESCARGA ---------- */
+.wait-screen{text-align:center;padding:8px 0 4px;}
+.wait-screen .eyebrow{font-size:14px;color:var(--texto-tenue);margin:0 0 4px;}
+
+.btn-download{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;
+  background:var(--neon);color:#12140a;border:none;
+  font-family:var(--font-texto);font-weight:700;font-size:16px;
+  padding:18px 22px;border-radius:8px;
+  cursor:pointer;
+  margin:22px 0 14px;
+  box-shadow:0 0 0 0 rgba(212,255,63,0.55);
+  animation:pulso-descarga 1.8s ease-out infinite;
+  transition:transform .12s ease, background .15s;
 }
-.ad-slot.large{height:100px;}
-.ad-slot.small{height:64px;}
-.timer-row{display:flex;align-items:center;gap:14px;margin:20px 0 16px;}
-.timer-circle{
-  width:46px;height:46px;border-radius:50%;
-  border:3px solid var(--linea);border-top-color:var(--neon);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:15px;flex-shrink:0;
-  animation:spin 1s linear infinite;
+.btn-download:hover{background:var(--neon-dim);transform:translateY(-1px);}
+.btn-download:active{transform:translateY(0);}
+.btn-download .icono{
+  display:inline-flex;
+  animation:rebote-flecha 1.4s ease-in-out infinite;
 }
-@keyframes spin{to{transform:rotate(360deg);}}
-.timer-text{font-size:13px;color:var(--texto-tenue);}
-.note{font-size:12px;color:var(--texto-tenue);margin-top:10px;text-align:center;}
+@keyframes pulso-descarga{
+  0%{box-shadow:0 0 0 0 rgba(212,255,63,0.55);}
+  70%{box-shadow:0 0 0 16px rgba(212,255,63,0);}
+  100%{box-shadow:0 0 0 0 rgba(212,255,63,0);}
+}
+@keyframes rebote-flecha{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(3px);}
+}
+.note{font-size:12px;color:var(--texto-tenue);margin-top:4px;text-align:center;}
