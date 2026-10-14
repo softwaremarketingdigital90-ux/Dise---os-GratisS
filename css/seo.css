@@ -1,0 +1,27 @@
+/* Estilos de las páginas estáticas generadas por generar_seo.py */
+.nav-link{color:var(--texto-tenue);text-decoration:none;font-weight:600;font-size:14px;}
+.nav-link:hover{color:var(--neon);}
+.migas{font-size:13px;color:var(--texto-tenue);margin:0 0 22px;}
+.migas a{color:var(--texto-tenue);text-decoration:none;}
+.migas a:hover{color:var(--neon);}
+a.card{display:block;text-decoration:none;}
+.ficha{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:36px;align-items:start;margin-bottom:48px;}
+.ficha-img{background:var(--panel);border:1px solid var(--linea);border-radius:var(--radio-sm);overflow:hidden;min-height:200px;}
+.ficha-info h1{font-family:var(--font-display);font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0 0 14px;letter-spacing:-0.01em;}
+.ficha-info p{color:var(--texto-tenue);line-height:1.6;margin:0 0 18px;}
+.ficha-specs{list-style:none;padding:0;margin:0 0 22px;display:grid;gap:6px;font-size:14px;}
+.ficha-specs b{color:var(--texto);}
+.ficha-info .btn-download{display:inline-flex;text-decoration:none;}
+.ver-mas{margin:22px 0 0;font-size:14px;}
+.ver-mas a{color:var(--neon);text-decoration:none;font-weight:600;}
+.rel-titulo{font-family:var(--font-display);font-size:22px;margin:0 0 18px;}
+.modelo-h1{font-family:var(--font-display);font-size:clamp(28px,4.5vw,44px);margin:0 0 12px;letter-spacing:-0.01em;}
+.modelo-intro{color:var(--texto-tenue);line-height:1.6;max-width:70ch;margin:0 0 28px;}
+.modelos-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.modelos-links a{background:var(--panel);border:1px solid var(--linea);border-radius:var(--radio-pill);padding:6px 14px;font-size:13px;text-decoration:none;color:var(--texto);}
+.modelos-links a:hover{border-color:var(--neon-dim);color:var(--neon);}
+.modelos-links a span{color:var(--texto-tenue);}
+.seo-modelos{padding:36px 24px;border-bottom:1px solid var(--linea);}
+.seo-modelos h2{font-family:var(--font-display);font-size:20px;margin:0 0 6px;}
+.seo-modelos p{color:var(--texto-tenue);font-size:14px;margin:0 0 16px;}
+@media (max-width:760px){.ficha{grid-template-columns:1fr;}}
