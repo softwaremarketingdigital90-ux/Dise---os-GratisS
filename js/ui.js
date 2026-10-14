@@ -89,12 +89,15 @@ const UI = (() => {
   }
 
   function crearTarjeta(producto) {
-    const card = document.createElement('button');
+    // Ahora es un <a> real: Google puede seguir el enlace a /diseno/<slug>/.
+    // Con clic normal sigue abriendo el modal; con Ctrl/Cmd/clic medio abre la página.
+    const card = document.createElement('a');
     card.className = 'card';
-    card.type = 'button';
+    card.href = producto.slug ? `/diseno/${producto.slug}/` : '#';
 
+    const altTexto = `Diseño vectorial ${producto.nombre} para vinil y calcomanías`;
     const thumbInterior = producto.thumb
-      ? `<img src="${producto.thumb}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;">`
+      ? `<img src="${producto.thumb}" alt="${altTexto}" loading="lazy" width="400" height="300" style="width:100%;height:100%;object-fit:cover;">`
       : iniciales(producto.nombre);
 
     const thumbFondo = producto.thumb
@@ -111,7 +114,11 @@ const UI = (() => {
         <span class="meta"><span>${producto.formato}</span><span>${producto.peso}</span></span>
       </span>
     `;
-    card.addEventListener('click', () => abrirFichaProducto(producto));
+    card.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      abrirFichaProducto(producto);
+    });
     return card;
   }
 
