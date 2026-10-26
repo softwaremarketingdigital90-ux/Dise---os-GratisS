@@ -1,35 +1,23 @@
 """
-Script de SUBIDA de una carpeta completa (ej. assets/previews) al
-CÓDIGO del repositorio de GitHub, manteniendo la misma estructura de
-carpetas. A diferencia de subir_a_github.py (que sube ZIPs como
-"Release assets"), este sube archivos normales del sitio (como tus
-imágenes de previsualización) directo al repositorio, en la ruta
-exacta que tú indiques.
+Script para SUBIR / ACTUALIZAR los archivos de tu carpeta local al
+repositorio de GitHub, manteniendo la misma estructura.
+
+- Si el archivo ya existe en GitHub y CAMBIÓ  -> lo actualiza.
+- Si el archivo ya existe y es IGUAL           -> lo salta.
+- Si el archivo no existe en GitHub            -> lo crea.
 
 REQUISITOS:
     pip install requests
-    Ya debes tener "gh auth login" hecho (usamos su mismo token,
-    no hace falta instalar Git por separado).
+    gh auth login   (una sola vez)
 
-Cómo usarlo:
-    python subir_carpeta_a_repo.py usuario/repo assets assets
+CÓMO USARLO (parado dentro de tu carpeta "tienda"):
+    python subir_carpeta_a_repo.py
 
-    - "usuario/repo"  -> tu repo, ej: softwaremarketingdigital90-ux/WEB-ANUNCIOS-
-    - "assets"        -> carpeta LOCAL que quieres subir (con subcarpetas adentro)
-    - "assets"        -> carpeta DESTINO dentro del repo (mismo nombre normalmente)
+No necesitas escribir nada más: ya viene configurado con tu repo y con
+las carpetas/archivos que quieres actualizar (ver CONFIGURACIÓN abajo).
 
-Ejemplo real para tu caso (parado dentro de tu carpeta "tienda"):
-    python subir_carpeta_a_repo.py softwaremarketingdigital90-ux/WEB-ANUNCIOS- assets assets
-
-Qué hace:
-1. Recorre la carpeta local que le indiques, con todas sus subcarpetas.
-2. Por cada archivo, lo sube al repo en la misma ruta relativa
-   (ej. assets/previews/xr-150.png -> queda en esa misma ruta en GitHub).
-3. Si el archivo ya existe en el repo, lo actualiza; si no, lo crea.
-4. Se puede volver a correr sin problema si se corta a la mitad — los
-   archivos que no cambiaron se detectan y se saltan (comparando el
-   contenido), así no pierdes tiempo re-subiendo todo de nuevo.
-5. Pausa breve entre archivos para no saturar la API de GitHub.
+Si quieres usar otro repo o carpeta, también funciona así:
+    python subir_carpeta_a_repo.py usuario/repo carpeta_local carpeta_destino
 """
 
 import sys
@@ -41,7 +29,32 @@ from pathlib import Path
 
 import requests
 
+# ===================== CONFIGURACIÓN =====================
+REPO = "softwaremarketingdigital90-ux/WEB-ANUNCIOS-"
+
+# Qué subir/actualizar (carpetas y archivos de tu carpeta local).
+# "assets" NO está aquí a propósito: ya está en GitHub y no lo tocamos.
+# Si dejas la lista vacía [], sube TODO lo que haya en la carpeta.
+ELEMENTOS = [
+    "css",
+    "data",
+    "diseno",
+    "js",
+    "modelo",
+    "generar_sitemap.py",
+    "googlea1fb8db3a133bfd8.html",
+    "index.html",
+    "README.md",
+    "robots.txt",
+    "sitemap.xml",
+    "subir_carpeta_a_repo.py",
+]
+
+# Carpetas que nunca se suben
+IGNORAR = {".git", "__pycache__", ".vscode", "node_modules"}
+
 PAUSA_ENTRE_ARCHIVOS = 0.3  # segundos
+# =========================================================
 
 
 def obtener_token():
@@ -53,8 +66,7 @@ def obtener_token():
 
 
 def sha_git_blob(contenido_bytes):
-    """Calcula el mismo hash que usa Git internamente, para saber si
-    un archivo ya está igual en el repo y así saltarlo."""
+    """Mismo hash que usa Git, para saber si el archivo ya está igual."""
     encabezado = f"blob {len(contenido_bytes)}\0".encode()
     return hashlib.sha1(encabezado + contenido_bytes).hexdigest()
 
@@ -65,19 +77,15 @@ def subir_archivo(sesion, repo, ruta_repo, ruta_local):
 
     url = f"https://api.github.com/repos/{repo}/contents/{ruta_repo}"
 
-    # Revisamos si el archivo ya existe (para actualizar en vez de crear,
-    # y para saltarlo si no cambió)
     resp_get = sesion.get(url)
     sha_existente = None
     if resp_get.status_code == 200:
-        datos_existentes = resp_get.json()
-        sha_existente = datos_existentes.get("sha")
-        # Si el contenido es idéntico al que ya está subido, lo saltamos
+        sha_existente = resp_get.json().get("sha")
         if sha_existente == sha_git_blob(contenido_bytes):
             return "sin_cambios"
 
     body = {
-        "message": f"Subir {ruta_repo}",
+        "message": f"Actualizar {ruta_repo}" if sha_existente else f"Subir {ruta_repo}",
         "content": contenido_b64,
     }
     if sha_existente:
@@ -86,19 +94,45 @@ def subir_archivo(sesion, repo, ruta_repo, ruta_local):
     resp_put = sesion.put(url, json=body)
 
     if resp_put.status_code in (200, 201):
-        return "subido"
+        return "actualizado" if sha_existente else "nuevo"
+    return f"error: {resp_put.status_code} {resp_put.text[:200]}"
+
+
+def listar_archivos(carpeta_base, elementos):
+    """Devuelve la lista de archivos a procesar."""
+    if elementos:
+        candidatos = []
+        for nombre in elementos:
+            ruta = carpeta_base / nombre
+            if not ruta.exists():
+                print(f"  (aviso) No existe en tu carpeta, se omite: {nombre}")
+            elif ruta.is_file():
+                candidatos.append(ruta)
+            else:
+                candidatos.extend(p for p in ruta.rglob("*") if p.is_file())
     else:
-        return f"error: {resp_put.status_code} {resp_put.text[:200]}"
+        candidatos = [p for p in carpeta_base.rglob("*") if p.is_file()]
+
+    return [
+        p for p in candidatos
+        if not any(parte in IGNORAR for parte in p.relative_to(carpeta_base).parts)
+    ]
 
 
 def main():
-    if len(sys.argv) < 4:
-        print("Uso: python subir_carpeta_a_repo.py usuario/repo carpeta_local carpeta_destino_en_repo")
-        sys.exit(1)
+    repo = REPO
+    carpeta_local = Path(".")
+    carpeta_destino = ""
+    elementos = ELEMENTOS
 
-    repo = sys.argv[1]
-    carpeta_local = Path(sys.argv[2])
-    carpeta_destino = sys.argv[3].strip("/")
+    # Modo manual (opcional): python script.py usuario/repo carpeta_local carpeta_destino
+    if len(sys.argv) >= 4:
+        repo = sys.argv[1]
+        carpeta_local = Path(sys.argv[2])
+        carpeta_destino = sys.argv[3].strip("/")
+        if carpeta_destino == ".":
+            carpeta_destino = ""
+        elementos = []
 
     if not carpeta_local.exists():
         print(f"No se encontró la carpeta local: {carpeta_local}")
@@ -111,46 +145,52 @@ def main():
         "Accept": "application/vnd.github+json",
     })
 
-    archivos = [p for p in carpeta_local.rglob("*") if p.is_file()]
+    archivos = listar_archivos(carpeta_local, elementos)
     total = len(archivos)
-    print(f"Encontrados {total} archivos en {carpeta_local}\n")
+    print(f"Repo: {repo}")
+    print(f"Archivos a revisar: {total}\n")
 
-    subidos = 0
+    nuevos = 0
+    actualizados = 0
     sin_cambios = 0
     fallidos = []
 
     for i, archivo in enumerate(archivos, start=1):
         ruta_relativa = archivo.relative_to(carpeta_local).as_posix()
-        ruta_repo = f"{carpeta_destino}/{ruta_relativa}"
+        ruta_repo = f"{carpeta_destino}/{ruta_relativa}" if carpeta_destino else ruta_relativa
 
         resultado = subir_archivo(sesion, repo, ruta_repo, archivo)
 
-        if resultado == "subido":
-            subidos += 1
+        if resultado == "nuevo":
+            nuevos += 1
+            print(f"  [NUEVO]       {ruta_repo}")
+        elif resultado == "actualizado":
+            actualizados += 1
+            print(f"  [ACTUALIZADO] {ruta_repo}")
         elif resultado == "sin_cambios":
             sin_cambios += 1
         else:
             fallidos.append((ruta_relativa, resultado))
+            print(f"  [ERROR]       {ruta_repo}")
 
         if i % 50 == 0 or i == total:
-            print(f"  {i}/{total} procesados... "
-                  f"({subidos} subidos, {sin_cambios} sin cambios, {len(fallidos)} fallidos)")
+            print(f"  ... {i}/{total} revisados")
 
         time.sleep(PAUSA_ENTRE_ARCHIVOS)
 
     print("\n" + "=" * 50)
     print("PROCESO TERMINADO")
     print("=" * 50)
-    print(f"Subidos:      {subidos}")
+    print(f"Nuevos:       {nuevos}")
+    print(f"Actualizados: {actualizados}")
     print(f"Sin cambios:  {sin_cambios}")
     print(f"Fallidos:     {len(fallidos)}")
 
     if fallidos:
-        print("\nAlgunos que fallaron (primeros 10):")
+        print("\nLos que fallaron (primeros 10):")
         for ruta, error in fallidos[:10]:
             print(f"  - {ruta}: {error}")
-        print("\nPuedes volver a correr este mismo comando para reintentar")
-        print("solo los que fallaron (los que ya subieron bien se saltan).")
+        print("\nVuelve a correr el mismo comando para reintentar solo esos.")
 
 
 if __name__ == "__main__":
