@@ -18,12 +18,18 @@ y crea:
 USO (parado en la carpeta raíz del sitio, donde está index.html):
 
     python generar_sitemap.py
+
+Por defecto ya cambia solo el dominio viejo (vectorgarage.vercel.app) por
+el nuevo (web-anuncios.vercel.app) en todas las páginas, así el sitemap, los
+canonical y robots.txt quedan con el mismo dominio que tienes en Search Console.
+
+Otras opciones:
     python generar_sitemap.py --dominio https://web-anuncios.vercel.app
-    python generar_sitemap.py --cambiar-dominio-desde https://vectorgarage.vercel.app
+    python generar_sitemap.py --cambiar-dominio-desde https://otro-dominio.vercel.app
     python generar_sitemap.py --lastmod 2026-10-26
 
-Corre este script DESPUÉS de generar_seo.py cada vez que agregues diseños,
-y luego sube sitemap.xml, robots.txt e index.html al repo.
+Después sube los cambios al repo:
+    python subir_carpeta_a_repo.py
 ---------------------------------------------------------------
 """
 
@@ -35,6 +41,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 DOMINIO_POR_DEFECTO = "https://web-anuncios.vercel.app"
+DOMINIO_VIEJO_POR_DEFECTO = "https://vectorgarage.vercel.app"
 MAX_URLS_POR_SITEMAP = 50000  # límite oficial de Google
 
 RE_ROBOTS = re.compile(r'<meta\s+name="robots"\s+content="([^"]*)"', re.I)
@@ -200,8 +207,9 @@ def main():
     ap = argparse.ArgumentParser(description="Genera sitemap.xml y robots.txt para VectorGarage")
     ap.add_argument("--dominio", default=DOMINIO_POR_DEFECTO, help="URL base sin barra final")
     ap.add_argument("--lastmod", default=None, help="Fecha fija AAAA-MM-DD (por defecto: fecha de cada archivo)")
-    ap.add_argument("--cambiar-dominio-desde", default=None, metavar="URL_VIEJA",
-                    help="Reemplaza esa URL por --dominio en todas las páginas antes de generar el sitemap")
+    ap.add_argument("--cambiar-dominio-desde", default=DOMINIO_VIEJO_POR_DEFECTO, metavar="URL_VIEJA",
+                    help="Reemplaza esa URL por --dominio en todas las páginas antes de generar el sitemap "
+                         f"(por defecto: {DOMINIO_VIEJO_POR_DEFECTO})")
     ap.add_argument("--sin-home", action="store_true", help="No tocar index.html")
     args = ap.parse_args()
 
@@ -210,9 +218,10 @@ def main():
         sys.exit("Ejecuta este script dentro de la carpeta raíz del sitio (donde está index.html).")
     dominio = args.dominio.rstrip("/")
 
-    if args.cambiar_dominio_desde:
-        n = cambiar_dominio(raiz, args.cambiar_dominio_desde.rstrip("/"), dominio)
-        print(f"Dominio cambiado en {n} archivos HTML")
+    viejo = (args.cambiar_dominio_desde or "").rstrip("/")
+    if viejo and viejo != dominio:
+        n = cambiar_dominio(raiz, viejo, dominio)
+        print(f"Dominio {viejo} -> {dominio}: cambiado en {n} archivos HTML")
 
     urls, saltadas, modelos = recolectar(raiz, dominio, args.lastmod)
     archivos = escribir_sitemaps(raiz, dominio, urls)
